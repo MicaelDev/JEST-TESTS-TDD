@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
 import * as UserService from "../services/UserService";
 
+export const ping = async (req: Request, res: Response) => {
+  res.json({ pong: true});
+}
+
 export const register = async (req: Request, res: Response) => {
   if (req.body.email && req.body.password) {
     let { email, password } = req.body;
@@ -8,14 +12,14 @@ export const register = async (req: Request, res: Response) => {
     const newUser = await UserService.createUser(email, password);
 
     if (newUser instanceof Error) {
-      res.json({ error: newUser.message });
+      return res.json({ error: newUser.message });
     } else {
       res.status(201);
-      res.json({ id: newUser.id });
+      return res.json({ id: newUser.id });
     }
   }
   res.json({ error: "E-mail e/ou senha não eviados." });
-};
+}
 
 export const login = async (req: Request, res: Response) => {
   if (req.body.email && req.body.password) {
@@ -30,7 +34,7 @@ export const login = async (req: Request, res: Response) => {
     }
   }
   res.json({ status: false });
-};
+}
 
 export const list = async (req: Request, res: Response) => {
   let users = await UserService.listAll();
@@ -41,4 +45,4 @@ export const list = async (req: Request, res: Response) => {
   }
 
   res.json({ list });
-};
+}
